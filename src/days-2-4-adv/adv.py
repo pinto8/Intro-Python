@@ -1,3 +1,4 @@
+from player import Player
 from room import Room
 
 # Declare all the rooms
@@ -24,20 +25,22 @@ earlier adventurers. The only exit is to the south."""),
 
 # Link rooms together
 
-room['outside'].n_to = room['foyer']
-room['foyer'].s_to = room['outside']
-room['foyer'].n_to = room['overlook']
-room['foyer'].e_to = room['narrow']
-room['overlook'].s_to = room['foyer']
-room['narrow'].w_to = room['foyer']
-room['narrow'].n_to = room['treasure']
-room['treasure'].s_to = room['narrow']
+room['outside'].n = room['foyer']
+room['foyer'].s = room['outside']
+room['foyer'].n = room['overlook']
+room['foyer'].e = room['narrow']
+room['overlook'].s = room['foyer']
+room['narrow'].w = room['foyer']
+room['narrow'].n = room['treasure']
+room['treasure'].s = room['narrow']
 
 #
 # Main
 #
 
 # Make a new player object that is currently in the 'outside' room.
+
+player = Player('Bob', room['outside'])
 
 # Write a loop that:
 #
@@ -49,3 +52,18 @@ room['treasure'].s_to = room['narrow']
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
+
+directionsList = ['n', 's', 'e', 'w']
+
+print('Hello ' + player.name + ', you are in the ' + player.room.name)
+consoleInput = input('Enter a direction (n, s, e, w) : ')
+
+while consoleInput != 'q':
+    if consoleInput not in directionsList:
+        print('Enter a valid direction (n, s, e, w)')
+    elif hasattr(player.room, consoleInput):
+        player.room = getattr(player.room, consoleInput)
+        print(player.room)
+    else:
+        print('You hit a wall!')
+    consoleInput = input('Enter a direction (n, s, e, w): ')
