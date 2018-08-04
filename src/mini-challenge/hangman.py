@@ -22,9 +22,7 @@ for line in file:
 file.close()
 targetWord = words[random.randint(0, 80)]
 lettersLeft = len(targetWord)-1
-print('letters left', lettersLeft)
 length = len(targetWord)-1
-print('length')
 global curWord
 curWord = "_" * length
 
@@ -39,7 +37,7 @@ def fillLetters( letter ):
     for i in range(len(targetWord)-1):
         if( targetWord[i : i+1]) == letter.lower():
             global curWord
-            curWord = curWord[0: i] + letter + curWord[i: ]
+            curWord = curWord[0: i] + letter + curWord[i+1: ]
             global lettersLeft
             lettersLeft -= 1
 
@@ -61,21 +59,22 @@ printWord(alphabet)
 while strikes < 5 and lettersLeft > 0:
     letter = input("\nPlease guess a letter...").upper()
     if letter not in alphabet:
-        letter = input("\nPlease guess a letter in the alphabet...").upper()
+        letter = input("\nPlease guess a letter in the alphabet or that hasn't been guessed").upper()
     elif letter.lower() in targetWord:
         print("Great!")
         fillLetters(letter)
+        alphabet.remove(letter.upper())
     elif letter in alphabet:
         strikes += 1
         print( str(strikes) + " / 5 strikes" )
+        alphabet.remove(letter.upper())
     printWord(curWord)
     drawBody()
-    alphabet.remove(letter.upper())
     print("Letters left:")
     printWord(alphabet)
 
 # Game over, print outcome
-if lettersLeft < 0:
+if lettersLeft == 0:
     print("YOU WIN!!")
 else:
     print("YOU LOSE...word was " + targetWord)
