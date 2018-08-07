@@ -54,19 +54,21 @@ player = Player('Bob', room['outside'])
 #
 # If the user enters "q", quit the game.
 
-directionsList = ['n', 's', 'e', 'w']
+directionsList = ['n', 's', 'e', 'w', 'i']
 actionsList = ['take', 'drop']
 
 print('Hello ' + player.name + ', you are in the ' + player.room.name)
 
-commandString = 'Enter a direction (n, s, e, w), or command (take/drop item) :'
+commandString = 'Enter a direction (n, s, e, w, i), or command (take/drop item), i for inventory :'
 parser = input(commandString).split(' ')
 
 while parser[0] != 'q':
-    if len(parser) == 1:
+    if len(parser) == 1: # one cardinal direction given
         if parser[0] not in directionsList:
-            print(commandString)
-        elif hasattr(player.room, parser[0]):
+            print('Invalid entry')
+        elif parser[0] == 'i': # player inventory
+            print('items: ', player.getItems())
+        elif hasattr(player.room, parser[0]): # progress in this direction
             player.room = getattr(player.room, parser[0])
             print(player.room)
             if len(player.room.items) > 0:
@@ -74,28 +76,31 @@ while parser[0] != 'q':
         else:
             print('You hit a wall!')
         parser = input(commandString).split(' ')
-    elif len(parser) == 2:
+    elif len(parser) == 2: # one cardinal direction given
         if parser[0] not in actionsList:
             print('Enter a valid action (take/drop)')
         elif parser[0] == 'take':
-            if parser[1] in player.room.getItems():
-                print(f"The {parser[1]} is now yours.")
-                item = player.room.drop(parser[1])
-                player.take(item)
-                print('Player Items:', player.getItems())
-                print('Room Items:', player.room.getItems())
-                parser = input(commandString).split(' ')
+            if parser[1] not in player.room.getItems():
+                print(f"That item is not in this room.  This room has the following items: {player.room.getItems()}")
             else:
-                print('parser', parser)
-                print(f"That item is not in this room.  This room has {player.room.getItems()} items")
-                parser = input(commandString).split(' ')
+                for i in player.room.items:
+                    if parser[1] == i.name:
+                        print(f"The {parser[1]} is now yours.")
+                        player.room.items.remove(i)
+                        player.items.append(i)
+                        print('Player Items:', player.getItems())
+                        print('Room Items:', player.room.getItems())
         elif parser[0] == 'drop':
-            if parser[1] in player.getItems():
-                print(f"Dropping {parser[1]} from your satchel.")
-                item = player.drop(parser[1])
-                player.room.take(item)
-                print('Player Items:', player.getItems())
-                print('Room Items:', player.room.getItems())
-                parser = input(commandString).split(' ')
+            if parser[1] not in player.getItems():
+                print(f"You don't have that item in your satchel.  You have the following items: {player.getItems()}")
+            else:
+                for i in player.items:
+                    if parser[1] == i.name:
+                        print(f"Dropping {parser[1]} from your satchel.")
+                        player.room.items.append(i)
+                        player.items.remove(i)
+                        print('Player Items:', player.getItems())
+                        print('Room Items:', player.room.getItems())
+        parser = input(commandString).split(' ')
 
                 
