@@ -54,20 +54,22 @@ player = Player('Bob', room['outside'])
 #
 # If the user enters "q", quit the game.
 
-directionsList = ['n', 's', 'e', 'w', 'i']
+directionsList = ['n', 's', 'e', 'w', 'i', 'score']
 actionsList = ['take', 'drop']
 
 print('Hello ' + player.name + ', you are in the ' + player.room.name)
 
-commandString = 'Enter a direction (n, s, e, w, i), or command (take/drop item), i for inventory :'
+commandString = 'Enter a direction (n, s, e, w), or command (take/drop item), i for inventory, or "score" :'
 parser = input(commandString).split(' ')
 
 while parser[0] != 'q':
-    if len(parser) == 1: # one cardinal direction given
+    if len(parser) == 1: # one direction given
         if parser[0] not in directionsList:
             print('Invalid entry')
         elif parser[0] == 'i': # player inventory
             print('items: ', player.getItems())
+        elif parser[0] == 'score':
+            print('SCORE: ', player.score)
         elif hasattr(player.room, parser[0]): # progress in this direction
             player.room = getattr(player.room, parser[0])
             print(player.room)

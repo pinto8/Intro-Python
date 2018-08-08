@@ -5,9 +5,10 @@ class Player:
         self.name = name
         self.room = room
         self.items = []
+        self.score = 0
 
     def __repr__(self):
-        return f"{self.name}: {self.room}, holding {self.items}"
+        return f"{self.name}: Score: {self.score}, Location: {self.room}, Items: {self.items}"
     
     def drop(self, item):
         return self.items.pop()
