@@ -1,6 +1,7 @@
 from player import Player
 from room import Room
-from item import Item
+from item import Item, Treasure
+
 
 # Declare all the rooms
 
@@ -9,7 +10,7 @@ room = {
                      "North of you, the cave mount beckons", []),
 
     'foyer':    Room("Foyer", """Dim light filters in from the south. Dusty
-passages run north and east.""", [Item('Torch', 'To light the way')]),
+passages run north and east.""", [Item('Torch', 'To light the way'), Treasure('Gold', 'To buy, buy, buy!', 100)]),
 
     'overlook': Room("Grand Overlook", """A steep cliff appears before you, falling
 into the darkness. Ahead to the north, a light flickers in
@@ -67,7 +68,7 @@ while parser[0] != 'q':
         if parser[0] not in directionsList:
             print('Invalid entry')
         elif parser[0] == 'i': # player inventory
-            print('items: ', player.getItems())
+            print('ITEMS: ', player.getItems())
         elif parser[0] == 'score':
             print('SCORE: ', player.score)
         elif hasattr(player.room, parser[0]): # progress in this direction
@@ -88,8 +89,8 @@ while parser[0] != 'q':
                 for i in player.room.items:
                     if parser[1] == i.name:
                         print(f"The {parser[1]} is now yours.")
-                        player.room.items.remove(i)
-                        player.items.append(i)
+                        player.room.drop(i)
+                        player.take(i)
                         print('Player Items:', player.getItems())
                         print('Room Items:', player.room.getItems())
         elif parser[0] == 'drop':
@@ -99,8 +100,8 @@ while parser[0] != 'q':
                 for i in player.items:
                     if parser[1] == i.name:
                         print(f"Dropping {parser[1]} from your satchel.")
-                        player.room.items.append(i)
-                        player.items.remove(i)
+                        player.room.take(i)
+                        player.drop(i)
                         print('Player Items:', player.getItems())
                         print('Room Items:', player.room.getItems())
         parser = input(commandString).split(' ')

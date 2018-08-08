@@ -10,10 +10,10 @@ class Room:
         return f"{self.name}: {self.description}, contains {self.items}"
 
     def drop(self, item):
-        return self.items.pop()
+        return self.items.remove(item)
 
     def take(self, item):
-        self.items.append(item)
+        return self.items.append(item)
 
     def getItems(self):
         return list(map(lambda item: item.getName(), self.items))
