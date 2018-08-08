@@ -68,7 +68,7 @@ while parser[0] != 'q':
         if parser[0] not in directionsList:
             print('Invalid entry')
         elif parser[0] == 'i': # player inventory
-            print('ITEMS: ', player.getItems())
+            print('Player Items: ', player.getItems())
         elif parser[0] == 'score':
             print('SCORE: ', player.score)
         elif hasattr(player.room, parser[0]): # progress in this direction
@@ -90,6 +90,9 @@ while parser[0] != 'q':
                     if parser[1] == i.name:
                         print(f"The {parser[1]} is now yours.")
                         player.room.drop(i)
+                        if i.taken == False:
+                            player.score += i.value
+                            print('Player Score:', player.score)
                         player.take(i)
                         print('Player Items:', player.getItems())
                         print('Room Items:', player.room.getItems())
