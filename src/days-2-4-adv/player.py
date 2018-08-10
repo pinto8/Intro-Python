@@ -1,3 +1,4 @@
+from item import Key
 # Write a class to hold player information, e.g. what room they are in
 # currently.
 class Player:
@@ -20,3 +21,11 @@ class Player:
 
     def getItems(self):
         return list(map(lambda item: item.getName(), self.items))
+
+    def hasKey(self, lockedRoom):
+        for i in self.items:
+            if i.opensRoom == lockedRoom:
+                return True
+        return False
+
+

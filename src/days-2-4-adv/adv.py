@@ -1,27 +1,29 @@
 from player import Player
 from room import Room
-from item import Item, Treasure
+from item import Item, Treasure, Key
 
 
 # Declare all the rooms
 
 room = {
     'outside':  Room("Outside Cave Entrance",
-                     "North of you, the cave mount beckons", []),
+                     "North of you, the cave mount beckons", [], True),
 
     'foyer':    Room("Foyer", """Dim light filters in from the south. Dusty
-passages run north and east.""", [Item('Torch', 'To light the way'), Treasure('Gold', 'To buy, buy, buy!', 100)]),
+                    passages run north and east.""", [
+                        Item('Torch', 'To light the way'),
+                        Treasure('Gold', 'To buy, buy, buy!', 100)], False),
 
     'overlook': Room("Grand Overlook", """A steep cliff appears before you, falling
-into the darkness. Ahead to the north, a light flickers in
-the distance, but there is no way across the chasm.""", []),
+                    into the darkness. Ahead to the north, a light flickers in
+                    the distance, but there is no way across the chasm.""", [], True),
 
     'narrow':   Room("Narrow Passage", """The narrow passage bends here from west
-to north. The smell of gold permeates the air.""", []),
+                    to north. The smell of gold permeates the air.""", [], True),
 
     'treasure': Room("Treasure Chamber", """You've found the long-lost treasure
-chamber! Sadly, it has already been completely emptied by
-earlier adventurers. The only exit is to the south.""", []),
+                    chamber! Sadly, it has already been completely emptied by
+                    earlier adventurers. The only exit is to the south.""", [], False),
 }
 
 
@@ -39,6 +41,9 @@ room['treasure'].s = room['narrow']
 #
 # Main
 #
+
+room['overlook'].take(Key('Key', 'To the treasure!', room['treasure']))
+room['outside'].take(Key('Key', 'To foyer!', room['foyer']))
 
 # Make a new player object that is currently in the 'outside' room.
 
@@ -72,8 +77,15 @@ while parser[0] != 'q':
         elif parser[0] == 'score':
             print('SCORE: ', player.score)
         elif hasattr(player.room, parser[0]): # progress in this direction
-            player.room = getattr(player.room, parser[0])
-            print(player.room)
+            nextRoom = getattr(player.room, parser[0])
+            if nextRoom.isOpen == True:
+                print('\nEntering ', nextRoom)
+                player.room = nextRoom
+            elif player.hasKey(nextRoom):
+                print('\nUsing your key to enter ', nextRoom)
+                player.room = nextRoom
+            else:
+                print('\nThe door is locked.  You need a key.')
             if len(player.room.items) > 0:
                 print('ITEM!', player.room.getItems())
         else:

@@ -4,6 +4,7 @@ class Item:
         self.description = description
         self.taken = False
         self.value = 0
+        self.opensRoom = 'No'
 
     def __repr__(self):
         return f"{self.name}: {self.description}"
@@ -26,8 +27,17 @@ class Treasure(Item):
         if self.taken == False:
             self.taken = True
             return self.value
-        else:
-            return 'Taken'
+
+
+class Key(Item):
+    def __init__(self, name, description, opensRoom):
+        Item.__init__(self, name, description)
+        self.opensRoom = opensRoom
+    
+    def on_take(self):
+        if self.taken == False:
+            self.taken = True
+            return self.opensRoom.name
 
 
     
