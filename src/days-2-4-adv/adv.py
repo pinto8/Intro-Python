@@ -60,13 +60,13 @@ actionsList = ['take', 'drop']
 
 print('Hello ' + player.name + ', you are in the ' + player.room.name)
 
-commandString = 'Enter a direction (n, s, e, w), or command (take/drop item), i for inventory, or "score" :'
+commandString = '\nEnter a direction (n, s, e, w), or command (take/drop item), i for inventory, or "score" :\n'
 parser = input(commandString).split(' ')
 
 while parser[0] != 'q':
     if len(parser) == 1: # one direction given
         if parser[0] not in directionsList:
-            print('Invalid entry')
+            print('\nInvalid entry\n')
         elif parser[0] == 'i': # player inventory
             print('Player Items: ', player.getItems())
         elif parser[0] == 'score':
@@ -88,12 +88,13 @@ while parser[0] != 'q':
             else:
                 for i in player.room.items:
                     if parser[1] == i.name:
-                        print(f"The {parser[1]} is now yours.")
+                        print(f"\nThe {parser[1]} is now yours.\n")
                         player.room.drop(i)
                         if i.taken == False:
                             player.score += i.value
                             print('Player Score:', player.score)
                         player.take(i)
+                        i.on_take()
                         print('Player Items:', player.getItems())
                         print('Room Items:', player.room.getItems())
         elif parser[0] == 'drop':
